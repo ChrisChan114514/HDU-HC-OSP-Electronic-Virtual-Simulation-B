@@ -1,0 +1,202 @@
+# ============================================================
+# OS / Editor
+# ============================================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+
+# ============================================================
+# LaTeX / TeX build artifacts
+# ============================================================
+
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
+*.xdv
+
+*.dvi
+*.ps
+
+
+# latexmk
+*.latexmain
+
+# minted / pygments cache
+_minted-*/
+*.pyg
+
+# arara
+*.arara.log
+
+# Beamer / glossaries / indexes
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.ilg
+*.ind
+*.idx
+
+
+# ============================================================
+# Quartus / Intel FPGA generated files
+# ============================================================
+
+# Quartus database and incremental compilation
+db/
+incremental_db/
+greybox_tmp/
+.qsys_edit/
+.qsys_edit/*
+.qsys_edit
+
+# Output directories
+output_files/
+simulation/
+sim/
+modelsim/
+questa/
+work/
+
+# Quartus reports / summaries / logs
+*.rpt
+*.summary
+*.done
+*.pin
+*.smsg
+*.qmsg
+*.jdi
+*.sof
+*.pof
+*.jam
+*.jic
+*.ekp
+*.rbf
+*.rpd
+*.cdf
+*.map
+*.fit
+*.sta
+*.flow.rpt
+*.asm.rpt
+*.tan.rpt
+*.eda.rpt
+
+# Compilation-generated netlists / intermediate files
+*.eqn
+*.hexout
+*.pmsf
+*.sld
+*.sld_design_entry
+*.sld_design_entry_dsc
+*.vqm
+*.vo
+*.vho
+
+# SignalTap / debug-generated files
+*.stp
+*.stp.backup
+*.csv
+*.vwf
+
+# Platform Designer / Qsys generated outputs
+*.qsys-generated/
+*_generation/
+*_sim/
+*_synth/
+*_inst.v
+*_inst.vhd
+
+# IP-generated folders
+ip/*/synth/
+ip/*/simulation/
+ip/*/*_sim/
+ip/*/*_synth/
+
+
+# ============================================================
+# FPGA simulation artifacts
+# ============================================================
+
+transcript
+vsim.wlf
+*.wlf
+*.vcd
+*.fst
+*.ghw
+*.vvp
+
+# Verilator
+obj_dir/
+*.verilator_deplist.tmp
+
+
+# ============================================================
+# Build / temporary files
+# ============================================================
+
+build/
+tmp/
+temp/
+.cache/
+*.bak
+*.orig
+
+
+# ============================================================
+# Keep important FPGA source/project files
+# ============================================================
+
+!*.qsf
+!*.qpf
+!*.sdc
+!*.qsys
+!*.ip
+!*.v
+!*.sv
+!*.vh
+!*.vhd
+!*.vhdl
+!*.tcl
+!*.mif
+!*.hex
+
+
+# ============================================================
+# Keep important TeX source files
+# ============================================================
+
+!*.tex
+!*.bib
+!*.cls
+!*.sty
+!*.bst
+!*.png
+!*.jpg
+!*.jpeg
+!*.svg
+!*.eps

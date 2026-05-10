@@ -1,0 +1,93 @@
+module lcd_display(
+  input        lcd_clk,        // LCD驱动时钟
+  input        sys_rst_n,      // 复位信号
+  input [10:0] pixel_xpos,     // 像素点横坐标(0-799)
+  input [10:0] pixel_ypos,     // 像素点纵坐标(0-479)
+  output reg [23:0] pixel_data // 像素点数据(RGB888)
+);
+
+//-----------------------------------------------------------------------------//
+// Parameter definition
+//-----------------------------------------------------------------------------//
+localparam H_DISP = 11'd800;  // 水平分辨率
+localparam V_DISP = 11'd480;  // 垂直分辨率
+
+localparam COLOR_WHITE = 24'hFFFFFF;
+localparam COLOR_BLACK = 24'h000000;
+localparam COLOR_RED   = 24'hFF0000;
+localparam COLOR_GREEN = 24'h00FF00;
+localparam COLOR_BLUE  = 24'h0000FF;
+localparam COLOR_BG    = 24'h000000;
+
+localparam integer CLK_FREQ_HZ        = 33_300_000; // LCD 像素时钟约 33.3MHz
+localparam integer HALF_SECOND_TICKS  = CLK_FREQ_HZ / 2;
+localparam integer BLOCK_COUNT        = 5;
+
+//-----------------------------------------------------------------------------//
+// 0.5 秒闪烁计数，控制色块流水亮灭
+//-----------------------------------------------------------------------------//
+reg [25:0] blink_cnt;
+reg [2:0]  active_block;
+
+//-----------------------------------------------------------------------------//
+// 基于横坐标获取当前像素所属色块
+//-----------------------------------------------------------------------------//
+wire [2:0] pixel_block_idx;
+assign pixel_block_idx = (pixel_xpos < 11'd160) ? 3'd0 :
+                         (pixel_xpos < 11'd320) ? 3'd1 :
+                         (pixel_xpos < 11'd480) ? 3'd2 :
+                         (pixel_xpos < 11'd640) ? 3'd3 :
+                         3'd4;
+
+//-----------------------------------------------------------------------------//
+// 色块索引对应的 RGB 颜色
+//-----------------------------------------------------------------------------//
+function [23:0] block_color;
+  input [2:0] idx;
+  begin
+    case (idx)
+      3'd0: block_color = COLOR_WHITE;
+      3'd1: block_color = COLOR_BLACK;
+      3'd2: block_color = COLOR_RED;
+      3'd3: block_color = COLOR_GREEN;
+      3'd4: block_color = COLOR_BLUE;
+      default: block_color = COLOR_BG;
+    endcase
+  end
+endfunction
+
+//-----------------------------------------------------------------------------//
+// 闪烁计数与当前亮显色块索引更新
+//-----------------------------------------------------------------------------//
+always @(posedge lcd_clk or negedge sys_rst_n) begin
+  if (!sys_rst_n) begin
+    blink_cnt    <= 26'd0;
+    active_block <= 3'd0;
+  end else if (blink_cnt == HALF_SECOND_TICKS - 1) begin
+    blink_cnt <= 26'd0;
+    if (active_block == BLOCK_COUNT - 1)
+      active_block <= 3'd0;
+    else
+      active_block <= active_block + 1'b1;
+  end else begin
+    blink_cnt <= blink_cnt + 1'b1;
+  end
+end
+
+//-----------------------------------------------------------------------------//
+// 根据像素坐标输出彩条颜色
+//-----------------------------------------------------------------------------//
+always @(posedge lcd_clk or negedge sys_rst_n) begin
+  if (!sys_rst_n) begin
+    pixel_data <= COLOR_BG;
+  end else if ((pixel_xpos < H_DISP) && (pixel_ypos < V_DISP)) begin
+    if (pixel_block_idx == active_block)
+      pixel_data <= block_color(pixel_block_idx);
+    else
+      pixel_data <= COLOR_BG;
+  end else begin
+    pixel_data <= COLOR_BG;
+  end
+end
+
+endmodule
